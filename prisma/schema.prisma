@@ -56,6 +56,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    todos          Todo[]
 }
 
 model VerificationToken {
@@ -72,5 +73,8 @@ model Todo {
     updatedAt        DateTime  @default(now())
     text             String
     done             Boolean    @default(false)
-    user             User       @relation(fields: [userId])
+    // references id from the user table//
+    user             User       @relation(fields: [userId], references: [id])
+    userId           String
 }
+// You need to ensure this schema is on our database run npx prisma db push
