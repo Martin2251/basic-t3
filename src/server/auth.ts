@@ -1,22 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-import { env } from "~/env.mjs";
-import { prisma } from "~/server/db";
-import { EmailProvider } from "next-auth/providers";
+import EmailProvider from "next-auth/providers/email";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "./db";
 
 /**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
+ * Module augmentation for `next-auth` types
+ * Allows us to add custom properties to the `session` object
+ * and keep type safety
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
+ **/
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
@@ -33,10 +30,10 @@ declare module "next-auth" {
 }
 
 /**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
+ * Options for NextAuth.js used to configure
+ * adapters, providers, callbacks, etc.
  * @see https://next-auth.js.org/configuration/options
- */
+ **/
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, user }) {
@@ -49,7 +46,6 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER || "http://localhost:3000",
